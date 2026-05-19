@@ -40,23 +40,28 @@ cd -
 
 isFailed=false
 
+# Function to stop the spin app
+cleanup() {
+    echo "Stopping Spin"
+    killall spin 2>/dev/null || true
+}
+trap cleanup EXIT
+
+##############################################
+# Test webpack app
+##############################################
+echo "=== Testing webpack app ==="
+
 # Build test app
-echo "Building the test app"
+echo "Building the test app (webpack)"
 cd test-app
 npm install > /dev/null
 spin build > /dev/null
-echo "Built the test app successfully"
+echo "Built the webpack test app successfully"
 
 # Start the spin app in the background
 echo "Starting Spin app"
 spin up -e FOO=BAR &
-
-# Function to stop the spin app
-cleanup() {
-    echo "Stopping Spin"
-    killall spin
-}
-trap cleanup EXIT
 
 # Wait for app to be up and running
 echo "Waiting for Spin app to be ready"
@@ -68,12 +73,48 @@ echo -e "Starting tests\n"
 # Test fs.readFileSync
 expected_output_fs_readfileSync=$(cat "./assets/test.txt")
 actual_output_fs_readfileSync=$(curl -s localhost:3000/testReadFile)
-run_test "fs.readFileSync" "$expected_output_fs_readfileSync" "$actual_output_fs_readfileSync"
+run_test "fs.readFileSync (webpack)" "$expected_output_fs_readfileSync" "$actual_output_fs_readfileSync"
 
-# Test fs.readFileSync
+# Test process.env
 actual_output_process_env=$(curl -s localhost:3000/testEnvVars)
 expected_output_process_env="{\"FOO\":\"BAR\"}"
-run_test "process.env" "$expected_output_process_env" "$actual_output_process_env"
+run_test "process.env (webpack)" "$expected_output_process_env" "$actual_output_process_env"
+
+# Stop the spin app
+killall spin 2>/dev/null || true
+sleep 1
+
+##############################################
+# Test esbuild app (same app, build profile)
+##############################################
+echo -e "\n=== Testing esbuild app ==="
+
+echo "Building the test app (esbuild)"
+spin build --profile esbuild > /dev/null
+echo "Built the esbuild test app successfully"
+
+# Start the spin app in the background
+echo "Starting Spin app"
+spin up --profile esbuild -e FOO=BAR &
+
+# Wait for app to be up and running
+echo "Waiting for Spin app to be ready"
+timeout 60s bash -c 'until curl --silent -f http://localhost:3000/health > /dev/null; do sleep 2; done'
+
+# Start the tests
+echo -e "Starting tests\n"
+
+# Test fs.readFileSync
+expected_output_fs_readfileSync=$(cat "./assets/test.txt")
+actual_output_fs_readfileSync=$(curl -s localhost:3000/testReadFile)
+run_test "fs.readFileSync (esbuild)" "$expected_output_fs_readfileSync" "$actual_output_fs_readfileSync"
+
+# Test process.env
+actual_output_process_env=$(curl -s localhost:3000/testEnvVars)
+expected_output_process_env="{\"FOO\":\"BAR\"}"
+run_test "process.env (esbuild)" "$expected_output_process_env" "$actual_output_process_env"
+
+cd ..
 
 echo -e "\n\nTests completed"
 

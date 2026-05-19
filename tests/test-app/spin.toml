@@ -15,5 +15,10 @@ source = "dist/wasi-ext-tests.wasm"
 exclude_files = ["**/node_modules"]
 files = [{ source = "assets/test.txt", destination = "test.txt" }]
 [component.wasi-ext-tests.build]
-command = "npm run build"
+command = "npm run build:webpack"
 watch = ["src/**/*.ts", "package.json"]
+
+[component.wasi-ext-tests.profile.esbuild]
+source = "dist/wasi-ext-tests-esbuild.wasm"
+[component.wasi-ext-tests.profile.esbuild.build]
+command = "npm run build:esbuild"

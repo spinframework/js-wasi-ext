@@ -1,5 +1,4 @@
 import fs from "fs";
-import { setupExt } from "@spinframework/wasi-ext";
 import process from "node:process"
 
 //@ts-ignore
@@ -8,7 +7,6 @@ addEventListener('fetch', (event: FetchEvent) => {
 });
 
 async function handleEvent(event: FetchEvent) {
-    setupExt()
     let resolve: any, reject: any;
     let responsePromise = new Promise(async (res, rej) => {
         resolve = res;
