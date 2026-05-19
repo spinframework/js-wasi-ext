@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-
 module.exports = class WasiExtPlugin {
     constructor() {
         this.fallbacks = {
@@ -11,6 +9,8 @@ module.exports = class WasiExtPlugin {
     }
 
     apply(compiler) {
+        const webpack = compiler.webpack;
+
         const providePlugin = new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
             process: [require.resolve('../lib/process'), 'default'],

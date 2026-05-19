@@ -8,21 +8,12 @@ process.title = "starlingMonkey"
 if (delete process.env) {
 	Object.defineProperty(process, 'env', {
 		get: function () {
-			// TODO: Should we attempt to get the env each time.  
-			// if env does not exist populate the list if running within the handler
-			if (!this._env) {
-				// This needs to be set within the handler function 
-				if (!this.insideHandler) {
-					// return empty env for top level
-					return {}
-				}
-				this._env = {}
-				let env = getEnvironment();
-				env.map((k: any) => {
-					this._env[k[0] as string] = k[1] as string;
-				})
-			}
-			return this._env;
+			let env = getEnvironment();
+			let result: Record<string, string> = {}
+			env.map((k: any) => {
+				result[k[0] as string] = k[1] as string;
+			})
+			return result;
 		},
 		configurable: true,
 		enumerable: true,
