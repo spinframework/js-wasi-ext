@@ -5,11 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "npx webpack && mkdirp dist && j2w -i build/bundle.js -n test -o dist/wasi-ext-tests.wasm"
+    "build": "npm run build:webpack",
+    "build:webpack": "npx webpack && mkdirp dist && j2w -i build/bundle.js -n test -o dist/wasi-ext-tests.wasm",
+    "build:esbuild": "node esbuild.config.js && mkdirp dist && j2w -i build/bundle-esbuild.js -n test -o dist/wasi-ext-tests-esbuild.wasm"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
+    "esbuild": "^0.21.0",
     "mkdirp": "^3.0.1",
     "ts-loader": "^9.4.1",
     "typescript": "^5.4.3",

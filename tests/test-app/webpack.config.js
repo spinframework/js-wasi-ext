@@ -1,6 +1,6 @@
 import path from 'path';
 import SpinSdkPlugin from "@spinframework/build-tools/plugins/webpack/index.js";
-import WasiExtPlugin from "@spinframework/wasi-ext/plugin/index.js";
+import WasiExtPlugin from "@spinframework/wasi-ext/plugin/webpack";
 
 const config = async () => {
     let SpinPlugin = await SpinSdkPlugin.init()

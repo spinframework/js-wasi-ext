@@ -1,5 +1,3 @@
-import process from "./process";
-
+/** @deprecated No longer required. Environment is read automatically. */
 export function setupExt() {
-    process.insideHandler = true;
 }
