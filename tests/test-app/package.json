@@ -12,7 +12,7 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "esbuild": "^0.21.0",
+    "esbuild": "^0.25.0",
     "mkdirp": "^3.0.1",
     "ts-loader": "^9.4.1",
     "typescript": "^5.4.3",
